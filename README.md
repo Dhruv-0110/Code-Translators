@@ -290,7 +290,7 @@ END
 | **Real-time** | WebSockets |
 | **Compile Streaming** | Server-Sent Events (SSE) |
 | **Desktop** | Electron |
-| **Database** | SQLite (via Prisma) |
+| **Database** | PostgreSQL (via Prisma) |
 
 ---
 
