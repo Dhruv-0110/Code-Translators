@@ -1,0 +1,12 @@
+// SQL Injection Detection Script
+// Monitors web server logs for SQL injection patterns
+
+MONITOR "webserver.log"
+
+RULE SQLInjection
+WHEN regex(".*SELECT.*FROM.*")
+DO
+    ALERT("SQL Injection attempt detected")
+    LOG("security_alerts.log")
+    EXECUTE_SCRIPT("block_ip.sh")
+END

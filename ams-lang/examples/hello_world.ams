@@ -1,0 +1,11 @@
+// AutomonScript Hello World Example
+// Demonstrates basic MONITOR, RULE, and CONSOLE usage
+
+MONITOR "system.log"
+
+RULE HelloWorld
+WHEN "STARTUP"
+DO
+    CONSOLE("Hello from AutomonScript!")
+    CONSOLE("Monitoring engine is active.")
+END

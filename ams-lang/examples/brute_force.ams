@@ -1,0 +1,13 @@
+// Brute Force Login Detection Script
+// Monitors auth.log for repeated failed login attempts
+
+MONITOR "auth.log"
+
+RULE BruteForceDetection
+WHEN "FAILED_LOGIN"
+OCCURS 5 TIMES IN 10 MINUTES
+DO
+    SEND_EMAIL("security@company.com")
+    LOG("alerts.log")
+    ALERT("Brute force attack detected!")
+END

@@ -1,0 +1,58 @@
+// Advanced Security Monitoring Script
+// Demonstrates: SET variables, SEVERITY levels, IF conditions, BLOCK_IP
+
+SET alert_email = "soc@company.com"
+SET max_attempts = 5
+
+MONITOR "auth.log"
+WATCH json "endpoint_data.json"
+
+RULE BruteForce SEVERITY HIGH
+WHEN "FAILED_LOGIN"
+OCCURS 5 TIMES IN 10 MINUTES
+IF status == "failed" AND attempts > 3
+DO
+    ALERT("Brute force attack detected!")
+    SEND_EMAIL("soc@company.com")
+    BLOCK_IP("192.168.1.100")
+    LOG("security_alerts.log")
+END
+
+RULE SQLInjection SEVERITY CRITICAL
+WHEN regex(".*SELECT.*FROM.*WHERE.*")
+DO
+    ALERT("SQL Injection attempt detected!")
+    BLOCK_IP("10.0.0.55")
+    EXECUTE_SCRIPT("block_ip.sh")
+    LOG("critical_alerts.log")
+END
+
+RULE PortScan SEVERITY MEDIUM
+WHEN "CONNECTION_ATTEMPT"
+OCCURS 100 TIMES IN 1 MINUTES
+DO
+    ALERT("Port scan detected from external source")
+    CALL_API("https://api.security.com/report")
+    LOG("network_alerts.log")
+END
+
+RULE MalwareDetection SEVERITY CRITICAL
+WHEN regex(".*malware.*payload.*download.*")
+IF threat_detected == "TRUE"
+DO
+    ALERT("Malware activity detected!")
+    SEND_EMAIL("incident-response@company.com")
+    BLOCK_IP("172.16.0.50")
+    EXECUTE_SCRIPT("quarantine.sh")
+    CALL_API("https://api.security.com/incident")
+    LOG("critical_alerts.log")
+END
+
+RULE UnauthorizedAccess SEVERITY LOW
+WHEN "ACCESS_DENIED"
+WITHIN 5 MINUTES
+IF authorized == "false"
+DO
+    CONSOLE("Unauthorized access attempt logged")
+    LOG("access.log")
+END

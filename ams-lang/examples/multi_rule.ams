@@ -1,0 +1,33 @@
+// Multi-Rule Security Monitoring Script
+// Demonstrates multiple rules, WATCH sources, and event correlation
+
+MONITOR "auth.log"
+WATCH json "events.json"
+WATCH csv "network_traffic.csv"
+
+RULE BruteForce
+WHEN "FAILED_LOGIN"
+OCCURS 5 TIMES IN 10 MINUTES
+DO
+    SEND_EMAIL("soc@company.com")
+    ALERT("Brute force attack detected!")
+    LOG("alerts.log")
+END
+
+RULE PortScan
+WHEN "CONNECTION_ATTEMPT"
+OCCURS 100 TIMES IN 1 MINUTES
+DO
+    ALERT("Port scan detected!")
+    EXECUTE_SCRIPT("block_ip.sh")
+    LOG("security.log")
+END
+
+RULE MalwareActivity
+WHEN regex(".*malware.*payload.*")
+DO
+    ALERT("Malware activity detected!")
+    SEND_EMAIL("incident-response@company.com")
+    CALL_API("https://api.security.com/incident")
+    LOG("critical_alerts.log")
+END
