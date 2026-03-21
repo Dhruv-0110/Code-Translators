@@ -41,7 +41,6 @@
 ## Project Structure
 
 ```text
-compiler_pbl/
 ├── ams-lang/                   # Compiler & Language Engine
 │   ├── grammar/AMS.g4          # ANTLR4 grammar definition
 │   ├── include/ams/            # C++ headers (compiler, runtime, interpreter)
