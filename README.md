@@ -83,7 +83,7 @@
 | **Java JRE** | ≥ 11 | ANTLR4 parser generation |
 | **PowerShell** | 5.1+ | Build scripts (Windows) |
 | **Electron** | *Auto-installed* | Desktop app shell |
-| **Prisma / SQLite** | *Auto-installed* | Backend database |
+| **Prisma / PostgreSQL** | *Auto-installed* | Backend database |
 
 ---
 
