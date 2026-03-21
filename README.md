@@ -87,6 +87,43 @@
 
 ---
 
+## Getting Started
+In the `AMScode/IDE` folder:
+### Environment Setup
+Create a .env file in the `IDE/` and make sure to change `user` and `password` fields:
+```
+DB_USER=user
+DB_PASSWORD=password
+DB_NAME=ams_db
+DATABASE_URL=postgresql://user:password@localhost:5432/ams_db?schema=public
+PRISMA_CLIENT_ENGINE_TYPE=binary
+PRISMA_CLI_QUERY_ENGINE_TYPE=binary
+```
+
+### Build and Launch
+Only for first time usage or after making changes to the codebase:
+```bash
+docker-compose up --build
+```
+
+### Run
+Once the images are built:
+```bash
+docker-compose up
+```
+
+### Stop
+Stop the containers while keeping images:
+```bash
+docker-compose stop
+```
+stop and remove the containers:
+```bash
+docker-compose down
+```
+### Note
+- For persistent storage database records are stored in `postgres_data` folder on host.
+
 ## Part 1 — AMS-Lang Compiler
 
 ### Install Dependencies
