@@ -2,6 +2,7 @@ const { app, BrowserWindow, ipcMain, dialog, shell } = require('electron');
 const path = require('path');
 const fs = require('fs/promises');
 const { spawn } = require('child_process');
+const fsSync = require('fs');
 
 let mainWindow = null;
 
@@ -51,6 +52,21 @@ ipcMain.handle('readFile', async (_e, filePath) => {
 
 ipcMain.handle('writeFile', async (_e, filePath, content) => {
   await fs.writeFile(filePath, content, 'utf8');
+  return { ok: true };
+});
+
+ipcMain.handle('deleteFile', async (_e, filePath) => {
+  const info = await fs.stat(filePath);
+  if (info.isDirectory()) {
+    await fs.rm(filePath, { recursive: true, force: true });
+  } else {
+    await fs.unlink(filePath);
+  }
+  return { ok: true };
+});
+
+ipcMain.handle('renameFile', async (_e, oldPath, newPath) => {
+  await fs.rename(oldPath, newPath);
   return { ok: true };
 });
 

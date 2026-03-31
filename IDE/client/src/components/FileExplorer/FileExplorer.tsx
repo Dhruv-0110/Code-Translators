@@ -101,6 +101,8 @@ export function FileExplorer({ projectPath, onOpenFile, activeFilePath, onOpenFo
   const [nodes, setNodes] = useState<TreeNode[]>([]);
   const [openDirs, setOpenDirs] = useState<Set<string>>(new Set([projectPath]));
   const [isLoading, setIsLoading] = useState(false);
+  const [showNewFileInput, setShowNewFileInput] = useState(false);
+  const [newFileName, setNewFileName] = useState('');
 
   const loadDir = useCallback(async (path: string): Promise<FileEntry[]> => {
     if (window.electronAPI) {
@@ -159,6 +161,22 @@ export function FileExplorer({ projectPath, onOpenFile, activeFilePath, onOpenFo
     });
   }, []);
 
+  const handleNewFileSubmit = () => {
+    const trimmed = newFileName.trim();
+    if (trimmed && onNewFile) {
+      onNewFile(trimmed);
+      setNewFileName('');
+      setShowNewFileInput(false);
+      // Refresh after a short delay to pick up the new file
+      setTimeout(refresh, 300);
+    }
+  };
+
+  const handleNewFileCancel = () => {
+    setNewFileName('');
+    setShowNewFileInput(false);
+  };
+
   // No project open
   if (!projectPath) {
     return (
@@ -193,8 +211,8 @@ export function FileExplorer({ projectPath, onOpenFile, activeFilePath, onOpenFo
         )}
         {onNewFile && (
           <button className="btn btn--icon" onClick={() => {
-            const name = prompt('New file name (e.g. monitor.ams):');
-            if (name?.trim()) onNewFile(name.trim());
+            setShowNewFileInput(true);
+            setNewFileName('');
           }} title="New File" style={{ padding:2 }}>
             <FilePlus size={12} />
           </button>
@@ -203,6 +221,41 @@ export function FileExplorer({ projectPath, onOpenFile, activeFilePath, onOpenFo
           <RefreshCw size={12} className={isLoading ? 'spin' : ''} />
         </button>
       </div>
+
+      {/* Inline new-file input (replaces broken window.prompt in Electron) */}
+      {showNewFileInput && (
+        <div style={{
+          display: 'flex', alignItems: 'center', gap: 4,
+          padding: '4px 8px',
+          borderBottom: '1px solid var(--border)',
+          background: 'var(--bg-secondary)',
+        }}>
+          <FilePlus size={12} style={{ color: 'var(--accent)', flexShrink: 0 }} />
+          <input
+            autoFocus
+            type="text"
+            value={newFileName}
+            onChange={(e) => setNewFileName(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') handleNewFileSubmit();
+              if (e.key === 'Escape') handleNewFileCancel();
+            }}
+            onBlur={handleNewFileCancel}
+            placeholder="filename.ams"
+            style={{
+              flex: 1,
+              background: 'var(--bg-primary)',
+              border: '1px solid var(--accent)',
+              borderRadius: 3,
+              color: 'var(--text-primary)',
+              fontSize: 11,
+              padding: '3px 6px',
+              outline: 'none',
+              fontFamily: 'var(--font-code)',
+            }}
+          />
+        </div>
+      )}
 
       {/* Project root label */}
       <div className="tree-item tree-item--dir" style={{ paddingLeft: 8, borderBottom: '1px solid var(--border)' }}>

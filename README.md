@@ -1,4 +1,4 @@
-# AMSCode(AMS) — Automated Log Monitoring & Observation Platform
+.# AMSCode(AMS) — Automated Log Monitoring & Observation Platform
 
 > A Domain-Specific Language and full-stack platform for writing, compiling, and deploying real-time log monitoring rules.
 

@@ -4,6 +4,8 @@ interface ElectronAPI {
   // File System
   readFile:       (path: string) => Promise<string>;
   writeFile:      (path: string, content: string) => Promise<{ ok: boolean }>;
+  deleteFile:     (path: string) => Promise<{ ok: boolean }>;
+  renameFile:     (oldPath: string, newPath: string) => Promise<{ ok: boolean }>;
   readDir:        (path: string) => Promise<FileEntry[]>;
   mkdir:          (path: string) => Promise<{ ok: boolean }>;
   openFileDialog: () => Promise<string | null>;
